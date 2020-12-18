@@ -6,47 +6,53 @@ var referenca = React.createRef()
 
 class ShoppingList extends Component {
     state = {
-        items: ['milk', 'eggs', 'bread'],
+        items: [
+            { name: 'milk', price: 87, bought: true },
+            { name: 'eggs', price: 159, bought: false },
+            { name: 'bread', price: 50, bought: false }
+        ],
     }
 
-    // addItem = () => {
-    //     const noviNizItema = this.state.items.slice()
-    //     noviNizItema.push('novi item')
-    //     this.setState({
-    //         items: noviNizItema
-    //     })
-    // }
-    addItem = () => {
+    buyItem = (name) => {
+        const stariObjekat = this.state.items.find((e) => e.name === name)
+        const noviObjekat = { ...stariObjekat, bought: true }
+        const updatovaniItemi = this.state.items.map(e => {
+            if (e.name !== name) return e
+            if (e.name === name) return noviObjekat
+        })
         this.setState({
-            items: [...this.state.items, 'novi item']
+            items: updatovaniItemi
         })
     }
 
+
     dodaj = () => {
-        // 1. procitaj sta pise u HTML
-        // 2. dodaj to sto pise u state
-        var noviItem = this.state.text
+        var noviItem = { name: this.state.name, price: Number(this.state.price) }
         this.setState({ items: [...this.state.items, noviItem] })
     }
 
-    inputChange = (key) => (event) => {
-        const vrednostInputa = event.target.value
+    changeHandler = (event) => {
+        const key = event.target.dataset.key
+        const value = event.target.value
         this.setState({
-            [key]: vrednostInputa
+            [key]: value
         })
     }
 
     render() {
-        console.log(this.state)
         return <div id="pera">
-            <input type="text" onChange={this.inputChange('name')}></input>
-            <input type="text" onChange={this.inputChange('price')}></input>
+            <div>{this.state.pera}</div>
+            <label>Name - {this.state.name}</label>
+            <input data-key="name" type="text" onChange={this.changeHandler}></input>
+            <label>Price - {this.state.price}</label>
+            <input data-key="price" type="text" onChange={this.changeHandler}></input>
+            <button onClick={this.dodaj}>Dodaj nesto u state</button>
             <ul>
-                {this.state.items.map(function (item, index, array) {
-                    return <div>{item}</div>
+                {this.state.items.map((item) => {
+                    return <ListItem key={item.name} fn={this.buyItem} name={item.name} price={item.price} bought={item.bought}></ListItem>
                 })}
             </ul>
-            <button onClick={this.dodaj}>Dodaj nesto u state</button>
+            <div>Total price: {this.state.items.filter(e => e.bought === true).map(item => item.price).reduce((a, b) => a + b)}</div>
         </div>
     }
 }

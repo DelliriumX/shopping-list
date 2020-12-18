@@ -1,21 +1,12 @@
 import React, { Component } from 'react';
 
 class ShoppingListItem extends Component {
-    state = {
-        bought: false
-    }
-
-
-    buyItem = () => this.setState({ bought: true })
-
-
     render() {
-
-        if (this.state.bought) {
+        if (this.props.bought) {
             return <li><strike>{this.props.name} - {this.props.price} RSD</strike></li>
         }
 
-        return <li onClick={this.buyItem}>{this.props.name} - {this.props.price} RSD</li>
+        return <li onClick={() => this.props.fn(this.props.name)}>{this.props.name} - {this.props.price} RSD</li>
     }
 }
 
